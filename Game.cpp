@@ -22,7 +22,7 @@ namespace mtm {
     }
 
     void Game::attack(const GridPoint &src_coordinates, const GridPoint &dst_coordinates) {
-        if (isOutOfBounds(src_coordinates), isOutOfBounds(src_coordinates)) {
+        if (isOutOfBounds(src_coordinates) || isOutOfBounds(dst_coordinates)) {
             throw IllegalCell();
         }
         if (getCharacterAt(src_coordinates) == nullptr) {
@@ -33,6 +33,9 @@ namespace mtm {
         bool isIllegal = true;
         int counter = 0;
         for (unsigned int i = 0; i < targets.size(); i++) {
+            if (attacker->getMovingRange() == 3) {
+                isIllegal = false;
+            }
             if (isOutOfBounds(targets[i])) {
                 continue;
             }
@@ -42,9 +45,9 @@ namespace mtm {
             }
             isIllegal = false;
             counter++;
-            attacker->attack(*victim, GridPoint::distance(dst_coordinates, targets[i]),counter==1);
+            attacker->attack(*victim, GridPoint::distance(dst_coordinates, targets[i]), counter == 1);
             if ((victim->getHealth()) <= 0) {
-                board[targets[i].row][targets[i].col]= nullptr;
+                board[targets[i].row][targets[i].col] = nullptr;
             }
         }
         if (isIllegal) {
@@ -65,14 +68,17 @@ namespace mtm {
 
     void Game::move(const GridPoint &src_coordinates, const GridPoint &dst_coordinates) {
         std::shared_ptr<Character> character = getCharacterAt(src_coordinates);
+        if (isOutOfBounds(dst_coordinates)) {
+            throw IllegalCell();
+        }
         if (getCharacterAt(src_coordinates) == nullptr) {
             throw CellEmpty();
         }
-        if (getCharacterAt(dst_coordinates) != nullptr) {
-            throw CellOccupied();
-        }
         if (character->getMovingRange() < GridPoint::distance(src_coordinates, dst_coordinates)) {
             throw MoveTooFar();
+        }
+        if (getCharacterAt(dst_coordinates) != nullptr) {
+            throw CellOccupied();
         }
         board[src_coordinates.row][src_coordinates.col] = nullptr;
         board[dst_coordinates.row][dst_coordinates.col] = character;
@@ -95,7 +101,10 @@ namespace mtm {
         if (!power_lifters_counter && !crossfitters_counter) {
             return false;
         }
-        *winningTeam = power_lifters_counter ? POWERLIFTERS : CROSSFITTERS;
+        if (winningTeam == nullptr) {
+            return true;
+        }
+        *winningTeam = (power_lifters_counter ? POWERLIFTERS : CROSSFITTERS);
         return true;
     }
 
@@ -134,7 +143,7 @@ namespace mtm {
         c->reload();
     }
 
-    std::ostream& operator<<(std::ostream &os, Game& game) {
+    std::ostream &operator<<(std::ostream &os, Game &game) {
         std::string str("");
         for (int row = 0; row < game.height; ++row) {
             for (int col = 0; col < game.width; col++) {

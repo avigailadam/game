@@ -6,6 +6,8 @@
 
 namespace mtm {
     class Exception : public std::exception {
+    public:
+        ~Exception() override =default;
     };
 
     class IllegalArgument : public mtm::Exception {

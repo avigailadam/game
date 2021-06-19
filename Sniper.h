@@ -16,13 +16,18 @@ namespace mtm {
         static const int AMMO_PER_ATTACK = 1;
         static const int STRONG_ATTACK = 3;
         int attack_counter;
+
+
     public:
+
         Sniper(Team team, int health, int currentAmmo, int range, int power);
+        ~Sniper() override = default;
+        std::vector<GridPoint>
+        getAttackCoordinates(const GridPoint &src_coordinate, const GridPoint &dst_coordinate) override;
 
-        std::vector<GridPoint> getAttackCoordinates(const GridPoint &src_coordinate,const GridPoint &dst_coordinate) override;
+        void attack(Character &victim, int distance_from_attacked_point, bool reduce) override;
 
-        void attack(Character &victim, int distance_from_attacked_point,bool reduce) override;
-        std::string& addToString(std::string& str) override;
+        std::string &addToString(std::string &str) override;
 
         std::shared_ptr<Character> clone() const override;
     };

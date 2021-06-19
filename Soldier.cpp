@@ -18,9 +18,11 @@ namespace mtm {
         std::vector<GridPoint> vector;
         int distance = GridPoint::distance(src_coordinate, dst_coordinate);
         int range = getRange();
-        if (distance > range ||
-            ((src_coordinate.row != dst_coordinate.row) && (src_coordinate.col != dst_coordinate.col))) {
+        if (distance > range) {
             throw OutOfRange();
+        }
+        if ((src_coordinate.row != dst_coordinate.row) && (src_coordinate.col != dst_coordinate.col)) {
+            throw IllegalTarget();
         }
         int max_dist = ceil(double(range) / 3);
         for (int i = dst_coordinate.row - max_dist; i <= dst_coordinate.row + max_dist; ++i) {
@@ -36,26 +38,28 @@ namespace mtm {
         return vector;
     }
 
-    void Soldier::attack(Character &victim, int distance_from_attacked_point,bool reduce) {
-        if (getTeam() == victim.getTeam()){
-            return;
-        }
+    void Soldier::attack(Character &victim, int distance_from_attacked_point, bool reduce) {
+
         if (reduce) {
-            if (getCurrentAmmo()<getAmmoPerAttack()){
+            if (getCurrentAmmo() < getAmmoPerAttack()) {
                 throw OutOfAmmo();
             }
             reduceAmmo();
         }
+        if (getTeam() == victim.getTeam()) {
+            return;
+        }
         int power = getPower();
-        if (distance_from_attacked_point == 0){
+        if (distance_from_attacked_point == 0) {
             victim.reduceHealth(power);
             return;
         }
-        victim.reduceHealth(ceil(double(power)/2));
+        victim.reduceHealth(ceil(double(power) / 2));
     }
 
     std::shared_ptr<Character> Soldier::clone() const {
-        return std::shared_ptr<Character>(new Soldier(getTeam(), getHealth(), getCurrentAmmo(), getRange(), getPower()));
+        return std::shared_ptr<Character>(
+                new Soldier(getTeam(), getHealth(), getCurrentAmmo(), getRange(), getPower()));
     }
 }
 
