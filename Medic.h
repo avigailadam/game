@@ -30,7 +30,6 @@ namespace mtm {
         /// @param victim
         /// @param distance_from_attacked_point
         /// @param reduce
-        void attack(Character &victim, int distance_from_attacked_point,bool reduce) override;
 
         std::string &addToString(std::string &str) override;
 

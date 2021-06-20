@@ -16,12 +16,10 @@ namespace mtm {
         if (GridPoint::distance(src_coordinate, dst_coordinate) > getRange()) {
             throw OutOfRange();
         }
-        if (getCurrentAmmo() < getAmmoPerAttack()) {
-            throw OutOfAmmo();
-        }
         if (GridPoint::distance(src_coordinate, dst_coordinate) == 0) {
             throw IllegalTarget();
         }
+
         return std::vector<GridPoint>(1, dst_coordinate);
     }
 
@@ -30,6 +28,9 @@ namespace mtm {
         if (victim.getTeam() == getTeam()) {
             victim.increaseHealth(getPower());
             return;
+        }
+        if (getCurrentAmmo() < getAmmoPerAttack()) {
+            throw OutOfAmmo();
         }
         reduceAmmo();
         victim.reduceHealth(getPower());
