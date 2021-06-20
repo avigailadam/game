@@ -23,7 +23,7 @@ namespace mtm {
         if (getCurrentAmmo() < getAmmoPerAttack()) {
             throw OutOfAmmo();
         }
-        if(distance==0){
+        if (distance == 0) {
             throw IllegalTarget();
         }
         return std::vector<GridPoint>(1, dst_coordinate);

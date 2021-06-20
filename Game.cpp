@@ -32,23 +32,22 @@ namespace mtm {
         std::vector<GridPoint> targets = attacker->getAttackCoordinates(src_coordinates, dst_coordinates);
         bool isIllegal = true;
         int counter = 0;
-        for (unsigned int i = 0; i < targets.size(); i++) {
+        for (const GridPoint &target : targets) {
             if (attacker->getMovingRange() == 3) {
                 isIllegal = false;
             }
-            if (isOutOfBounds(targets[i])) {
+            if (isOutOfBounds(target)) {
                 continue;
             }
-
-            std::shared_ptr<Character> victim = getCharacterAt(targets[i]);
+            std::shared_ptr<Character> victim = getCharacterAt(target);
             if (victim == nullptr) {
                 continue;
             }
             isIllegal = false;
             counter++;
-            attacker->attack(*victim, GridPoint::distance(dst_coordinates, targets[i]), counter == 1);
+            attacker->attack(*victim, GridPoint::distance(dst_coordinates, target), counter == 1);
             if ((victim->getHealth()) <= 0) {
-                board[targets[i].row][targets[i].col] = nullptr;
+                board[target.row][target.col] = nullptr;
             }
         }
         if (isIllegal) {
@@ -69,17 +68,17 @@ namespace mtm {
 
     void Game::move(const GridPoint &src_coordinates, const GridPoint &dst_coordinates) {
         std::shared_ptr<Character> character = getCharacterAt(src_coordinates);
-        if (isOutOfBounds(dst_coordinates)) {
+        if (isOutOfBounds(src_coordinates) || isOutOfBounds(dst_coordinates)) {
             throw IllegalCell();
         }
         if (getCharacterAt(src_coordinates) == nullptr) {
             throw CellEmpty();
         }
-        if (character->getMovingRange() < GridPoint::distance(src_coordinates, dst_coordinates)) {
-            throw MoveTooFar();
-        }
         if (getCharacterAt(dst_coordinates) != nullptr) {
             throw CellOccupied();
+        }
+        if (character->getMovingRange() < GridPoint::distance(src_coordinates, dst_coordinates)) {
+            throw MoveTooFar();
         }
         board[src_coordinates.row][src_coordinates.col] = nullptr;
         board[dst_coordinates.row][dst_coordinates.col] = character;
@@ -111,7 +110,7 @@ namespace mtm {
 
     std::shared_ptr<Character>
     Game::makeCharacter(CharacterType type, Team team, units_t health, units_t ammo, units_t range, units_t power) {
-        if (health < 1||power<0||ammo<0||range<0||(team!=POWERLIFTERS&&team!=CROSSFITTERS)) {
+        if (health < 1 || power < 0 || ammo < 0 || range < 0 || (team != POWERLIFTERS && team != CROSSFITTERS)) {
             throw IllegalArgument();
         }
         switch (type) {

@@ -16,10 +16,21 @@ namespace mtm {
 
         ~Medic() override = default;
 
+        // TODO document
+        ///
+        /// @param src_coordinate
+        /// @param dst_coordinate
+        /// @return
         std::vector<GridPoint>
         getAttackCoordinates(const GridPoint &src_coordinate, const GridPoint &dst_coordinate) override;
 
         void attack(Character &victim, int distance_from_attacked_point, bool reduce) override;
+        // TODO document
+        ///
+        /// @param victim
+        /// @param distance_from_attacked_point
+        /// @param reduce
+        void attack(Character &victim, int distance_from_attacked_point,bool reduce) override;
 
         std::string &addToString(std::string &str) override;
 

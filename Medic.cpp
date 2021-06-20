@@ -12,25 +12,23 @@ namespace mtm {
     }
 
     std::vector<GridPoint>
-    Medic::getAttackCoordinates(const GridPoint &src_coordinate, const GridPoint &dst_coordinate){
-        if(GridPoint::distance(src_coordinate, dst_coordinate)==0){
-            throw IllegalTarget();
-        }
+    Medic::getAttackCoordinates(const GridPoint &src_coordinate, const GridPoint &dst_coordinate) {
         if (GridPoint::distance(src_coordinate, dst_coordinate) > getRange()) {
             throw OutOfRange();
         }
         if (getCurrentAmmo() < getAmmoPerAttack()) {
             throw OutOfAmmo();
         }
-        if(GridPoint::distance(src_coordinate, dst_coordinate)==0){
+        if (GridPoint::distance(src_coordinate, dst_coordinate) == 0) {
             throw IllegalTarget();
         }
         return std::vector<GridPoint>(1, dst_coordinate);
     }
-    void Medic::attack(Character &victim, int distance_from_attacked_point,bool reduce){
+
+    void Medic::attack(Character &victim, int distance_from_attacked_point, bool reduce) {
         assert(distance_from_attacked_point == 0);
         if (victim.getTeam() == getTeam()) {
-            victim.cureTeammate(getPower());
+            victim.increaseHealth(getPower());
             return;
         }
         reduceAmmo();

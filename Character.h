@@ -25,19 +25,35 @@ namespace mtm {
         int ammo_per_attack;
 
     protected:
-
-        Character(Team team, int health, int currentAmmo, int reloadAmmo, int range, int power,
+        /// @param team The team the character belongs to.
+        /// @param health The current health
+        /// @param currentAmmo
+        /// @param reloadAmmo Ammo reloaded on reload
+        /// @param attackRange
+        /// @param attackDamageBase
+        /// @param movingRange
+        /// @param ammoPerAttack
+        Character(Team team, int health, int currentAmmo, int reloadAmmo, int attackRange, int attackDamageBase,
                   int movingRange, int ammoPerAttack) : team(team), health(health), current_ammo(currentAmmo),
-                                                        reload_ammo(reloadAmmo), range(range), power(power),
+                                                        reload_ammo(reloadAmmo), range(attackRange), power(attackDamageBase),
                                                         moving_range(movingRange),
                                                         ammo_per_attack(ammoPerAttack) {}
 
     public:
+        /// @return A clone of the current character, including all of its current state.
         virtual std::shared_ptr<Character> clone() const = 0;
 
+        /// @param characterPosition
+        /// @param positionToAttack
+        /// @return All coordinates (potentially around) the positionToAttack. This enables support for area attacks
         virtual std::vector<GridPoint>
-        getAttackCoordinates(const GridPoint &src_coordinate, const GridPoint &dst_coordinate) = 0;
+        getAttackCoordinates(const GridPoint &characterPosition, const GridPoint &positionToAttack) = 0;
 
+        // TODO document
+        ///
+        /// @param victim
+        /// @param distance_from_attacked_point
+        /// @param reduce
         virtual void attack(Character &victim, int distance_from_attacked_point, bool reduce) = 0;
 
         virtual ~Character()= default;
@@ -46,10 +62,11 @@ namespace mtm {
             health -= amount;
         }
 
-        void cureTeammate(int amount) {
+        void increaseHealth(int amount) {
             health += amount;
         }
 
+        /// Reduces ammo by the character's ammo per attack.
         void reduceAmmo() {
             current_ammo -= ammo_per_attack;
         }
@@ -86,6 +103,10 @@ namespace mtm {
             return moving_range;
         }
 
+        // TODO document
+        ///
+        /// @param str
+        /// @return
         virtual std::string &addToString(std::string &str) = 0;
     };
 }
