@@ -13,8 +13,14 @@ namespace mtm {
 
     std::vector<GridPoint>
     Medic::getAttackCoordinates(const GridPoint &src_coordinate, const GridPoint &dst_coordinate){
+        if(GridPoint::distance(src_coordinate, dst_coordinate)==0){
+            throw IllegalTarget();
+        }
         if (GridPoint::distance(src_coordinate, dst_coordinate) > getRange()) {
             throw OutOfRange();
+        }
+        if (getCurrentAmmo() < getAmmoPerAttack()) {
+            throw OutOfAmmo();
         }
         if(GridPoint::distance(src_coordinate, dst_coordinate)==0){
             throw IllegalTarget();
@@ -26,9 +32,6 @@ namespace mtm {
         if (victim.getTeam() == getTeam()) {
             victim.cureTeammate(getPower());
             return;
-        }
-        if (getCurrentAmmo()<getAmmoPerAttack()){
-            throw OutOfAmmo();
         }
         reduceAmmo();
         victim.reduceHealth(getPower());

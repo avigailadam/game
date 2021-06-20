@@ -21,6 +21,9 @@ namespace mtm {
         if (distance > range) {
             throw OutOfRange();
         }
+        if (getCurrentAmmo() < getAmmoPerAttack()) {
+            throw OutOfAmmo();
+        }
         if ((src_coordinate.row != dst_coordinate.row) && (src_coordinate.col != dst_coordinate.col)) {
             throw IllegalTarget();
         }
@@ -39,11 +42,7 @@ namespace mtm {
     }
 
     void Soldier::attack(Character &victim, int distance_from_attacked_point, bool reduce) {
-
         if (reduce) {
-            if (getCurrentAmmo() < getAmmoPerAttack()) {
-                throw OutOfAmmo();
-            }
             reduceAmmo();
         }
         if (getTeam() == victim.getTeam()) {

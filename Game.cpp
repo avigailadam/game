@@ -39,6 +39,7 @@ namespace mtm {
             if (isOutOfBounds(targets[i])) {
                 continue;
             }
+
             std::shared_ptr<Character> victim = getCharacterAt(targets[i]);
             if (victim == nullptr) {
                 continue;
@@ -110,7 +111,7 @@ namespace mtm {
 
     std::shared_ptr<Character>
     Game::makeCharacter(CharacterType type, Team team, units_t health, units_t ammo, units_t range, units_t power) {
-        if (health < 1) {
+        if (health < 1||power<0||ammo<0||range<0||(team!=POWERLIFTERS&&team!=CROSSFITTERS)) {
             throw IllegalArgument();
         }
         switch (type) {

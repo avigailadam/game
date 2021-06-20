@@ -20,6 +20,9 @@ namespace mtm {
         if (distance > range || distance < ceil(double(range) / 2)) {
             throw OutOfRange();
         }
+        if (getCurrentAmmo() < getAmmoPerAttack()) {
+            throw OutOfAmmo();
+        }
         return std::vector<GridPoint>(1, dst_coordinate);
     }
 
@@ -27,9 +30,6 @@ namespace mtm {
         assert(distance_from_attacked_point == 0);
         if (victim.getTeam() == getTeam()) {
             throw IllegalTarget();
-        }
-        if (getCurrentAmmo() < getAmmoPerAttack()) {
-            throw OutOfAmmo();
         }
         reduceAmmo();
         int attack_by;
