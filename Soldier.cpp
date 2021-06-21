@@ -41,19 +41,13 @@ namespace mtm {
         return vector;
     }
 
-    void Soldier::attack(Character &victim, int distance_from_attacked_point, bool reduce) {
-        if (reduce) {
-            reduceAmmo();
+    bool Soldier::attack(std::shared_ptr<Character> victim, int distance_from_attacked_point) {
+        if (victim == nullptr || getTeam() == victim->getTeam()) {
+            return true;
         }
-        if (getTeam() == victim.getTeam()) {
-            return;
-        }
-        int power = getPower();
-        if (distance_from_attacked_point == 0) {
-            victim.reduceHealth(power);
-            return;
-        }
-        victim.reduceHealth(ceil(double(power) / 2));
+        double coefficient = distance_from_attacked_point == 0 ? 1.0 : 0.5;
+        victim->reduceHealth(ceil(getPower() * coefficient));
+        return true;
     }
 
     std::shared_ptr<Character> Soldier::clone() const {

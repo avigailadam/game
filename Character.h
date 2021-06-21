@@ -39,6 +39,11 @@ namespace mtm {
                                                         moving_range(movingRange),
                                                         ammo_per_attack(ammoPerAttack) {}
 
+    protected:
+        int getAmmoPerAttack() const {
+            return ammo_per_attack;
+        }
+
     public:
         /// @return A clone of the current character, including all of its current state.
         virtual std::shared_ptr<Character> clone() const = 0;
@@ -53,8 +58,9 @@ namespace mtm {
         ///
         /// @param victim
         /// @param distance_from_attacked_point
-        /// @param reduce
-        virtual void attack(Character &victim, int distance_from_attacked_point, bool reduce) = 0;
+        /// @throw IllegalTarget
+        /// @return true if the attack cost ammo
+        virtual bool attack(std::shared_ptr<Character> victim, int distance_from_attacked_point) = 0;
 
         virtual ~Character()= default;
 
@@ -73,10 +79,6 @@ namespace mtm {
 
         void reload() {
             current_ammo += reload_ammo;
-        }
-
-        int getAmmoPerAttack() const {
-            return ammo_per_attack;
         }
 
         Team getTeam() const {

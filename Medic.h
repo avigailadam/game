@@ -16,20 +16,20 @@ namespace mtm {
 
         ~Medic() override = default;
 
-        // TODO document
-        ///
         /// @param src_coordinate
         /// @param dst_coordinate
-        /// @return
+        /// @throw OutOfRange if the point to attack is out of its attack range.
+        /// @throw IllegalTarget if the attack is on them (it'll come before OutOfAmmo because there is no ammo check on characters from the attacker team).
+        /// @return vector with one coordinate - the one they need to attack.
         std::vector<GridPoint>
         getAttackCoordinates(const GridPoint &src_coordinate, const GridPoint &dst_coordinate) override;
 
-        void attack(Character &victim, int distance_from_attacked_point, bool reduce) override;
-        // TODO document
-        ///
         /// @param victim
-        /// @param distance_from_attacked_point
-        /// @param reduce
+        /// @param distance_from_attacked_point that's here just to make sure we attack the requested point.
+        /// @throw OutOfAmmo if the victim is from the other team, and the attacker doesn't have enough ammo to attack.
+        /// if the victim is from the same team as the attacker they are healed, otherwise they are damaged.
+        /// @return true if it was an attack and not a heal action.
+        bool attack(std::shared_ptr<Character> victim, int distance_from_attacked_point) override;
 
         std::string &addToString(std::string &str) override;
 

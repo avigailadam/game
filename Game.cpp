@@ -30,28 +30,19 @@ namespace mtm {
         }
         std::shared_ptr<Character> attacker = getCharacterAt(src_coordinates);
         std::vector<GridPoint> targets = attacker->getAttackCoordinates(src_coordinates, dst_coordinates);
-        bool isIllegal = true;
-        int counter = 0;
+        bool costAmmo = false;
         for (const GridPoint &target : targets) {
-            if (attacker->getMovingRange() == 3) {
-                isIllegal = false;
-            }
             if (isOutOfBounds(target)) {
                 continue;
             }
             std::shared_ptr<Character> victim = getCharacterAt(target);
-            if (victim == nullptr) {
-                continue;
-            }
-            isIllegal = false;
-            counter++;
-            attacker->attack(*victim, GridPoint::distance(dst_coordinates, target), counter == 1);
+            costAmmo |= attacker->attack(victim, GridPoint::distance(dst_coordinates, target));
             if ((victim->getHealth()) <= 0) {
                 board[target.row][target.col] = nullptr;
             }
         }
-        if (isIllegal) {
-            throw IllegalTarget();
+        if (costAmmo) {
+            attacker->reduceAmmo();
         }
     }
 

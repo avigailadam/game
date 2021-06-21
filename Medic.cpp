@@ -19,21 +19,23 @@ namespace mtm {
         if (GridPoint::distance(src_coordinate, dst_coordinate) == 0) {
             throw IllegalTarget();
         }
-
         return std::vector<GridPoint>(1, dst_coordinate);
     }
 
-    void Medic::attack(Character &victim, int distance_from_attacked_point, bool reduce) {
+    bool Medic::attack(std::shared_ptr<Character> victim, int distance_from_attacked_point) {
         assert(distance_from_attacked_point == 0);
-        if (victim.getTeam() == getTeam()) {
-            victim.increaseHealth(getPower());
-            return;
+        if (victim == nullptr) {
+            throw IllegalTarget();
+        }
+        if (victim->getTeam() == getTeam()) {
+            victim->increaseHealth(getPower());
+            return false;
         }
         if (getCurrentAmmo() < getAmmoPerAttack()) {
             throw OutOfAmmo();
         }
-        reduceAmmo();
-        victim.reduceHealth(getPower());
+        victim->reduceHealth(getPower());
+        return true;
     }
 
     std::shared_ptr<Character> Medic::clone() const {
