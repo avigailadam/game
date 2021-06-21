@@ -40,6 +40,8 @@ namespace mtm {
                                                         ammo_per_attack(ammoPerAttack) {}
 
     protected:
+
+        /// @return the amount of ammo that cost the character to attack.
         int getAmmoPerAttack() const {
             return ammo_per_attack;
         }
@@ -54,11 +56,11 @@ namespace mtm {
         virtual std::vector<GridPoint>
         getAttackCoordinates(const GridPoint &characterPosition, const GridPoint &positionToAttack) = 0;
 
-        // TODO document
-        ///
         /// @param victim
         /// @param distance_from_attacked_point
-        /// @throw IllegalTarget
+        /// @throw OutOfRange if the target is not within the attacker range
+        /// @throw OutOfAmmo if the attacker needs ammo to preform the action but don't have enough.
+        /// @throw IllegalTarget if the attacker is not capable or allowed to attack that point.
         /// @return true if the attack cost ammo
         virtual bool attack(std::shared_ptr<Character> victim, int distance_from_attacked_point) = 0;
 
@@ -105,10 +107,9 @@ namespace mtm {
             return moving_range;
         }
 
-        // TODO document
-        ///
+
         /// @param str
-        /// @return
+        /// @return the right representing letter of each character.
         virtual std::string &addToString(std::string &str) = 0;
     };
 }

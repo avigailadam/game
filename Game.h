@@ -83,7 +83,7 @@ namespace mtm {
         /// @throw OutOfRange if the destination is not within the attacker's attacking range.
         /// @throw OutOfAmmo if the attacker doesn't have enough ammo left to attack.
         /// @throw Illegal target if the destination is not a legal destination for the character.
-        /// if the character o
+        /// if the character on the attacker position can attack the target on the destination by its criteria then it does its own attack way.
         void attack(const GridPoint &src_coordinates, const GridPoint &dst_coordinates);
 
         /// @param coordinates the character's place on board.

@@ -9,3 +9,5 @@ set(LIBRARIES
 add_executable(game main.cpp game_test.cpp character_test.cpp Character.h Soldier.h Soldier.cpp Medic.h Medic.cpp Sniper.h
                 Sniper.cpp Game.cpp Game.h Exceptions.h Exceptions.cpp Auxiliaries.cpp Auxiliaries.h)
 target_link_libraries(game ${LIBRARIES})
+add_executable(gameMeron game_test_Meron_Shira.cpp Character.h Soldier.h Soldier.cpp Medic.h Medic.cpp Sniper.h
+        Sniper.cpp Game.cpp Game.h Exceptions.h Exceptions.cpp Auxiliaries.cpp Auxiliaries.h)

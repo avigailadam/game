@@ -33,6 +33,7 @@ namespace mtm {
 
         std::string &addToString(std::string &str) override;
 
+        /// @return a pointer to a clone of the character.
         std::shared_ptr<Character> clone() const override;
     };
 }
