@@ -24,15 +24,15 @@ namespace mtm {
 
     bool Medic::attack(std::shared_ptr<Character> victim, int distance_from_attacked_point) {
         assert(distance_from_attacked_point == 0);
-        if (victim == nullptr) {
-            throw IllegalTarget();
-        }
         if (victim->getTeam() == getTeam()) {
             victim->increaseHealth(getPower());
             return false;
         }
         if (getCurrentAmmo() < getAmmoPerAttack()) {
             throw OutOfAmmo();
+        }
+        if (victim == nullptr) {
+            throw IllegalTarget();
         }
         victim->reduceHealth(getPower());
         return true;
