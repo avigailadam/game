@@ -37,7 +37,7 @@ namespace mtm {
             }
             std::shared_ptr<Character> victim = getCharacterAt(target);
             costAmmo |= attacker->attack(victim, GridPoint::distance(dst_coordinates, target));
-            if ((victim->getHealth()) <= 0) {
+            if (board[target.row][target.col] != nullptr && (victim->getHealth()) <= 0) {
                 board[target.row][target.col] = nullptr;
             }
         }
